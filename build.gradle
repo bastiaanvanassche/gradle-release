@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 defaultTasks 'clean', 'build'
 
@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
 	compile gradleApi()
-	groovy localGroovy()
+	compile 'org.codehaus.groovy:groovy-all:2.3.6'
 	testCompile("org.spockframework:spock-core:$spockVersion") { exclude group: 'org.codehaus.groovy' }
 	testCompile "junit:junit:$junitVersion",
 			"org.ajoberstar:gradle-git:$gradleGitVersion"

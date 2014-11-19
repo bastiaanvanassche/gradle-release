@@ -2,6 +2,7 @@ package release
 
 import org.gradle.api.GradleException
 import org.gradle.testfixtures.ProjectBuilder
+
 import spock.lang.Specification
 
 @Mixin(PluginHelper)
@@ -26,6 +27,10 @@ class GitReleasePluginTests extends Specification {
 
         project.file("test.txt").withWriter {it << "test"}
         exec(true, [:], localRepo, 'git', 'add', 'test.txt')
+
+        exec(true, [:], localRepo, 'git', 'config', "user.email", 'you@example.com')
+        exec(true, [:], localRepo, 'git', 'config', "user.name",'your name')
+
         exec(true, [:], localRepo, 'git', 'commit', "-m", "test", 'test.txt')
 
         def props = project.file("gradle.properties")

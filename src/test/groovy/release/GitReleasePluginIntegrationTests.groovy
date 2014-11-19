@@ -1,8 +1,8 @@
 package release
 
-import org.gradle.testfixtures.ProjectBuilder
-
 import static org.eclipse.jgit.lib.Repository.shortenRefName
+
+import org.gradle.testfixtures.ProjectBuilder
 
 @Mixin(PluginHelper)
 class GitReleasePluginIntegrationTests extends GitSpecification {
@@ -21,7 +21,7 @@ class GitReleasePluginIntegrationTests extends GitSpecification {
     def 'integration test'() {
         given: 'setting project version to 1.1'
         project.version = '1.1'
-        project.setProperty('gradle.release.useAutomaticVersion', "true")
+        project.ext.set("gradle.release.useAutomaticVersion", "true")
         gitAddAndCommit(localGit, "gradle.properties") { it << "version=$project.version" }
         localGit.push().setForce(true).call()
         when: 'calling release task indirectly'
