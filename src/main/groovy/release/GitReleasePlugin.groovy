@@ -31,7 +31,9 @@ class GitReleasePlugin extends BaseScmPlugin<GitReleasePluginConvention> {
 
 
 	@Override
-	GitReleasePluginConvention buildConventionInstance() { releaseConvention().git }
+	GitReleasePluginConvention buildConventionInstance() {
+		releaseConvention().git
+	}
 
 
 	@Override
@@ -48,7 +50,6 @@ class GitReleasePlugin extends BaseScmPlugin<GitReleasePluginConvention> {
 			warnOrThrow(releaseConvention().failOnCommitNeeded,
 					(['You have uncommitted files:', LINE, * status[UNCOMMITTED], LINE] as String[]).join('\n'))
 		}
-
 	}
 
 
@@ -136,11 +137,21 @@ class GitReleasePlugin extends BaseScmPlugin<GitReleasePluginConvention> {
 	String gitExec(Collection<String> params, String errorMessage, String... errorPattern) {
 		def gitDir = resolveGitDir()
 		def workTree = resolveWorkTree()
-		def cmdLine = ['git', "--git-dir=${gitDir}", "--work-tree=${workTree}"].plus(params)
+		def gitCommand = resolvePathToGitExecutable();
+		def cmdLine = [gitCommand, "--git-dir=${gitDir}", "--work-tree=${workTree}"].plus(params)
 		log.debug("gitExec - 1 - {cmdLine: ${cmdLine}, errorMessage: ${errorMessage}, errorPattern: ${errorPattern}}")
 		return exec(cmdLine, errorMessage, errorPattern)
 	}
-
+	private String resolvePathToGitExecutable(){
+		String pathToGitExecutable = convention().pathToGitExecutable;
+		//		File file = new File(pathToGitExecutable);
+		//		if (!file.exists()){
+		//			def msg = "Path to git executable is invalid: '$pathToGitExecutable'";
+		//			log.error(msg)
+		//			throw new IllegalStateException(msg);
+		//		}
+		pathToGitExecutable
+	}
 	private String resolveGitDir() {
 		if (convention().scmRootDir) {
 			project.rootProject.file(convention().scmRootDir + "/.git").canonicalPath.replaceAll("\\\\", "/")
